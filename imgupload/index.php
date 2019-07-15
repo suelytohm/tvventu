@@ -13,7 +13,7 @@
    <br />
    <div align="right">
     <input type="file" name="multiple_files" id="multiple_files" multiple />
-    <input type="hidden" name="id_postagem" id="id_postagem" value="2" />
+    <input type="hidden" name="id_postagem" id="id_postagem" value="7" />
     <span class="text-muted">Somente arquivos do tipo .jpg, png, .gif são permitidos</span>
     <span id="error_multiple_files"></span>
    </div>
@@ -95,10 +95,10 @@ $(document).ready(function(){
     }
     else
     {
+     form_data.append("id_postagem", id);    
      form_data.append("file[]", document.getElementById('multiple_files').files[i]);
     }
    }
-  form_data.append(id);
   }
   if(error_images == '')
   {

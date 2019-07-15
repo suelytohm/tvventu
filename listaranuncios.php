@@ -115,13 +115,13 @@ else
             </div>          
             <div class="row">
                 <div class="col-md-3">
-                    <a href="postagem.php" class="btn btn-primary">Postagens</a>
+                    <a href="listarpostagens.php" class="btn btn-primary">Postagens</a>
                 </div>    
                 <div class="col-md-3">    
                     <a href="postaovivo.php" class="btn btn-danger">Ao Vivo</a>
                 </div>    
                 <div class="col-md-3">                        
-                    <a href="postanuncios.php" class="btn btn-success">Anúncios</a>
+                    <a href="listaranuncios.php" class="btn btn-success">Anúncios</a>
                 </div>    
                 <div class="col-md-3">                        
                     <a class="btn btn-warning">Melhores do Ano</a>

@@ -7,11 +7,6 @@ $id_postagem = $_POST['id_postagem'];
 
 if(count($_FILES["file"]["name"]) > 0)
 {
-    
-
-    
-
- //$output = '';
  sleep(3);
  for($count=0; $count<count($_FILES["file"]["name"]); $count++)
  {
