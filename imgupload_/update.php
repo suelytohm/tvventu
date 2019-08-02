@@ -12,8 +12,8 @@ if(isset($_POST["image_id"]))
  $query = '';
  if($old_name != $new_name)
  {
-  $old_path = 'img/postagens/slide/' . $old_name;
-  $new_path = 'img/postagens/slide/' . $new_name;
+  $old_path = 'files/' . $old_name;
+  $new_path = 'files/' . $new_name;
   if(rename($old_path, $new_path))
   { 
    $query = "

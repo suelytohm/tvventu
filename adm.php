@@ -3,6 +3,7 @@
 $aovivo = "NÃO";
 $postagens = "0";
 $anuncios = "0";
+$videos = "0";
 
 session_start();
 
@@ -30,6 +31,7 @@ if($rs->execute())
         $aovivo = $registro->aovivo ;
         $postagens = $registro->postagens ;
         $anuncios = $registro->anuncios ;
+        $videos = $registro->videos ;
     }
 }
 else
@@ -86,7 +88,7 @@ else
             <div class="row">
                 <div class="col-md-12 text-center">
                     <hr>
-                    <img src="img/logo2.png">
+                    <a href="index.php"><img src="img/logo2.png"></a>
                     <h1 class="titulo" align="center">Painel Administrativo</h1>        
                 </div>
             </div>
@@ -98,15 +100,18 @@ else
             <div class="row">
                 <div class="col-md-3">
                     <a href="listarpostagens.php" class="btn btn-primary">Postagens</a>
-                </div>    
-                <div class="col-md-3">    
+                </div>
+                <div class="col-md-2">                        
+                    <a href="postarvideo.php" class="btn btn-amber">Vídeos</a>
+                </div>                    
+                <div class="col-md-2">    
                     <a href="postaovivo.php" class="btn btn-danger">Ao Vivo</a>
                 </div>    
-                <div class="col-md-3">                        
+                <div class="col-md-2">                        
                     <a href="listaranuncios.php" class="btn btn-success">Anúncios</a>
                 </div>    
                 <div class="col-md-3">                        
-                    <a class="btn btn-warning">Melhores do Ano</a>
+                    <a href="listarmelhoresdoano.php" class="btn btn-warning">Melhores do Ano</a>
                 </div>
             </div>            
             <div class="row">
@@ -121,6 +126,10 @@ else
                             <h2 class="display-5">Ao Vivo:</h2>
                             <h2 class="display-2"><strong><?php echo $aovivo;?></strong></h2>
                         </div>
+                        <div class="col-md-3">
+                            <h2 class="display-5">Vídeos:</h2>
+                            <h2 class="display-2"><strong><?php echo $videos;?></strong></h2>
+                        </div>                        
                         <div class="col-md-3">
                             <h2 class="display-5">Postagens:</h2>
                             <h2 class="display-2"><strong><?php echo $postagens;?></strong></h2>

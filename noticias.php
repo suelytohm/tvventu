@@ -20,6 +20,7 @@ $data = "";
 $categoria = "";
 $imagem_secundaria = "";
 
+// INÍCIO POSTAGEM
 
 $rs = $connection->prepare("SELECT titulo, imagem_principal as imagem, texto, autor, DATE_FORMAT(DATA,'%d/%m/%Y') as data, categoria, ifnull(imagem_secundaria, 0) as imagem_secundaria from postagens where id = :id");
 $rs->bindValue(':id', "{$id}");
@@ -43,6 +44,96 @@ else
 {
     echo "Falha";
 }
+// FINAL POSTAGEM
+
+
+// INÍCIO CONTADORES
+/*try
+{ */
+    $rs = $connection->prepare("SELECT image_id, image_name, image_description as descricao, id_postagem, categoria FROM tbl_image WHERE id_postagem = :id;");
+    $rs->bindValue(':id', "{$id}");
+    
+    $count1 = 0;
+    $saida1 = '';
+    $temslide = 0;
+    
+    if($rs->execute())
+    {
+        while($registro = $rs->fetch(PDO::FETCH_OBJ))
+        {
+            $temslide = 1; 
+    
+            if($count1 == 0)
+            {
+                $saida1 .= "<li data-target='#carousel-example-2' data-slide-to='" . $count1 . "' class='active'></li>";
+            }
+            else
+            {
+                $saida1 .= "<li data-target='#carousel-example-2' data-slide-to='" . $count1 . "'</li>";
+            }
+            $count1 = $count1 + 1;
+        }
+    }
+/*}
+catch(PDOException $e)
+{
+    echo "Falha: " . $e->getMessage();
+    exit();
+}
+*/
+// FINAL CONTADORES
+
+
+// INÍCIO SLIDE
+
+$saida = '';
+$count = 0;
+
+$rs = $connection->prepare("SELECT image_id as id, image_name AS imagem, image_description as descricao, id_postagem, categoria FROM tbl_image WHERE id_postagem = :id ORDER BY id;");
+$rs->bindValue(':id', "{$id}");
+
+
+if($rs->execute())
+{
+    while($registro = $rs->fetch(PDO::FETCH_OBJ))
+    {
+        $id = $registro->id;
+        $descricao = $registro->descricao;
+        $imagem = $registro->imagem;            
+        $id_postagem = $registro->id_postagem;
+        $categoria = $registro->categoria;  
+
+        if($count == 0)
+        {
+            $saida .= "<div class='carousel-item active'>";
+        }
+        else
+        {
+            $saida .= "<div class='carousel-item'>";
+        }
+        
+        $saida .= "<div class='view'>";
+        $saida .= "<img class='d-block w-100' src='imgupload/" . $imagem . "'>";
+        // $saida .= "<div class='mask rgba-black-light'></div>";
+        $saida .= "</div>";
+        $saida .= "<div class='carousel-caption'>";
+        $saida .= "<h3 class='h3-responsive'>" . $descricao . "</h3>";
+        $saida .= "</div>";
+        $saida .= "</div>";
+        
+        $count = $count + 1;
+    }
+}
+
+// FINAL SLIDE
+
+
+
+
+
+
+
+
 
 
 ?>
@@ -96,12 +187,28 @@ else
             margin-bottom: 50px;
             font-size: 1.5rem;
         }
+        .social-icon
+        {
+            max-width: 50px;
+        }        
+        .texto
+        {
+            margin-top: 50px;
+        }
+
+        <?php
+        if($descricao != '')
+        {
+            echo ".carousel-caption { padding: 15px; background-color: rgba(0,0,0,0.8); }";
+        }
+        ?>
+
     </style>
     
 </head>
     
 <body class="animated fadeIn black">
-    
+
     <?php include 'header.php'; ?>
     
     <div class="section">
@@ -113,9 +220,49 @@ else
                     <h6>Postado em: <?php echo $data;?></h6>
                     <hr>
                     <div class="text-center">
-                        <img class="img-destaque" src="<?php echo $imagemDestaque; ?>"/>
+
+
+                        <!--Carousel Wrapper-->
+                        <div id="carousel-example-2" class="carousel slide carousel-fade" data-ride="carousel">
+                        <!--Indicators-->
+                        <ol class="carousel-indicators">
+                            <?php echo $saida1; ?>
+                        </ol>
+                        <div class="carousel-inner" role="listbox">
+                            <?php echo $saida; ?>
+                        </div>
+                        <!--/.Slides-->
+                        <!--Controls-->
+                        <a class="carousel-control-prev" href="#carousel-example-2" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-example-2" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        <!--/.Controls-->
+                        </div>
+                        <!--/.Carousel Wrapper-->
+
+                        <?php 
+                        
+                        if($temslide == 0)
+                        {
+                            echo "<img class='img-destaque' src=' $imagemDestaque '/>";
+                        }
+                        elseif($imagem_secundaria != '')
+                        {
+                            $imagem_secundaria = "https://www.youtube.com/embed/" . $imagem_secundaria;
+                            echo "<iframe width='100%' height='500' src='" . $imagem_secundaria . "'?rel=0&autoplay=1' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+                        }
+                        
+                        ?>
+
+                        
+
                     </div>
-                    <p><?php echo $texto;?></p>
+                    <p class="texto"><?php echo $texto;?></p>
                 </div>
                 <div class="col-md-3">
                     <div class="row">
@@ -131,6 +278,17 @@ else
     </div>
     
     <?php include 'footer.php'?>
+
+    
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.2/js/mdb.min.js"></script>
+        
         
 </body>        
 </html>

@@ -116,6 +116,10 @@ elseif($id == 3)
             margin-bottom: 50px;
             font-size: 1.5rem;
         }
+        .social-icon
+        {
+            max-width: 50px;
+        }          
     </style>
     
 </head>

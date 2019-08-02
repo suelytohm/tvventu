@@ -10,7 +10,7 @@ $data = "";
 $categoria = "";
 
 
-    if(isset($_REQUEST["id"]))
+    if(isset($_REQUEST["carregar"]))
     {
         
         $id = $_REQUEST['id'];
@@ -40,69 +40,51 @@ $categoria = "";
     {
         $erro = 0;
         
-        if(isset($_FILES["campoArquivo"]))
-        {
-            $arquivoNome = $_FILES["campoArquivo"]["name"];
-            $arquivoTipo = $_FILES["campoArquivo"]["type"];
-            $arquivoTamanho = $_FILES["campoArquivo"]["size"];
-            $arquivoNomeTemp = $_FILES["campoArquivo"]["tmp_name"];
-            $erro = $_FILES["campoArquivo"]["error"];
+        
+        $titulo = $_REQUEST['titulo'];
+        $texto = $_REQUEST['texto'];
+        $autor = $_REQUEST['autor'];
+        $categoria = $_REQUEST['categoria'];
+        $tipo = $_REQUEST['tipo'];
+        $id = $_REQUEST['id'];
+        
+        $categoria = $_REQUEST['categoria'];
+
+        try
+        {   
+            // $sql = "CALL novapostagem(?, ?, ?, ?, ?, ?, ?)";
+            $sql = "UPDATE postagens SET titulo = ?, texto = ?, autor = ?, categoria = ?, tipo = ? WHERE id = ?;";
+
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(1, $titulo);
+            $stmt->bindParam(2, $texto);
+            $stmt->bindParam(3, $autor);
+            $stmt->bindParam(4, $categoria);
+            $stmt->bindParam(5, $tipo);
+            $stmt->bindParam(6, $id);
+            $stmt->execute();            
             
-            if($erro == 0)
-            {
-                if(is_uploaded_file($arquivoNomeTemp))
-                {
-                    if(move_uploaded_file($arquivoNomeTemp, "img/postagens/".$arquivoNome))
-                    {
-                        $destino = "img/postagens/".$arquivoNome;
-                        
-                        try
-                        {   
-                            // $sql = "CALL novapostagem(?, ?, ?, ?, ?, ?, ?)";
-                            $sql = "UPDATE postagens SET titulo = ?, texto = ?, autor = ?, categoria = ?, tipo = ?, imagem_principal = ? WHERE id = ?;";
+            /*
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(1, $_REQUEST['titulo']);
+            $stmt->bindParam(2, $_REQUEST['texto']);
+            $stmt->bindParam(3, $_REQUEST['autor']);
+            $stmt->bindParam(4, $_REQUEST['categoria']);
+            $stmt->bindParam(5, $_REQUEST['tipo']);
+            $stmt->bindParam(6, $id);
+            $stmt->execute(); */
 
-                            $stmt = $connection->prepare($sql);
-                            $stmt->bindParam(1, $_REQUEST['titulo']);
-                            $stmt->bindParam(2, $_REQUEST['texto']);
-                            $stmt->bindParam(3, $_REQUEST['autor']);
-                            $stmt->bindParam(4, $_REQUEST['categoria']);
-                            $stmt->bindParam(5, $_REQUEST['tipo']);
-                            $stmt->bindParam(6, $destino);
-                            $stmt->bindParam(7, $id);
-                            // $stmt->bindParam(6, $_REQUEST['imagem_principal']);
-                            $stmt->execute();
-
-                            if($stmt->errorCode() != "00000")
-                            {
-                                echo $stmt->errorInfo();
-                            }
-                        }
-                        catch(PDOException $e)
-                        {
-                            echo "Falha: " . $e->getMessage();
-                            exit();
-                        }
-                        include 'mensagem_sucesso.php';
-                    }
-                    else
-                    {
-                        $erro = "Falha ao mover o arquivo (permissão de acesso, caminho inválido)";
-                    }
-                }
-                else
-                {
-                    $erro = "Erro no envio: arquivo não recebido com sucesso.";
-                }
-            }
-            else
+            if($stmt->errorCode() != "00000")
             {
-                $erro = "Erro no envio: " . $erro;
+                echo $stmt->errorInfo();
             }
         }
-        else
+        catch(PDOException $e)
         {
-            $erro = "Arquivo enviado não encontrado.";
+            echo "Falha: " . $e->getMessage();
+            exit();
         }
+        header("Location gravacao_sucesso.php?acao=postagens&tipo=editar&id=" . $id . "&categoria=" . $categoria ."");
         
         if($erro !== 0)
         {
@@ -166,6 +148,7 @@ $categoria = "";
                     <form method="post" action="?atualizar=true" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
+                                <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
                                 <label for="titulo">Titulo</label><br>
                                 <input class="form-control" type="text" name="titulo" id="titulo" required value="<?php echo $titulo;?>">
                                 <br>
@@ -180,6 +163,7 @@ $categoria = "";
                                 <br>                
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" name="categoria" id="categoria">
+                                  <option value="melhoresDoAno">Melhores Do Ano</option>                                    
                                   <option value="noticias">Notícias</option>
                                   <option value="esportes">Esportes</option>
                                   <option value="politica">Política</option>
@@ -193,15 +177,17 @@ $categoria = "";
                                   <option value="Normal">Normal</option>
                                   <option value="Destaque">Destaque</option>
                                 </select>                     
-                                <br>                                    
-                                <label>Imagem</label>
-                                <input class="form-control" type="file" name="campoArquivo">
+                                <br><br>
+                                <a href="alterarimagem.php?id=<?php echo $id; ?>" class="btn btn-success">Alterar capa</a>
+                                <a href="imgupload/index.php?id=<?php echo $id; ?>&categoria=postagens" class="btn btn-info">Gerenciar Slider</a>                                
+                                <!--label>Imagem</label>
+                                <input class="form-control" type="file" name="campoArquivo"-->
                                 <br>                                
                             </div>
                         </div>
-                        <input class="btn btn-danger" type="submit" value="Postar">
-                        <a href="adm.php" class="btn btn-primary">Voltar</a>
-                        <a href="index.php" class="btn btn-success">Ir para o Site</a>
+                        <input class="btn btn-primary" type="submit" value="Alterar">
+                        <a href="excluirpostagem.php?id=<?php echo $id; ?>" class="btn btn-danger">Excluir</a>
+                        <a href="adm.php" class="btn btn-success">Voltar</a>
                     </form> 
                 </div>
             </div>

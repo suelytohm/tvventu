@@ -1,7 +1,13 @@
+<?php
+
+$id = $_REQUEST['id'];
+$categoria = $_REQUEST['categoria'];
+?>
+
 <!DOCTYPE html>
 <html>
  <head>
-  <title>Envio de Imagens</title>
+  <title>Gerenciador de Sliders - TV Ventu</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -9,12 +15,16 @@
  <body>
   <br />
   <div class="container">
-   <h3 align="center">Envio de Imagens</h3>
+   <h3 align="center">Gerenciador de Sliders - TV Ventu</h3>
    <br />
+   <div align="left">
+    <a href="../adm.php" class="btn btn-primary">Voltar</a>
+   </div>
    <div align="right">
     <input type="file" name="multiple_files" id="multiple_files" multiple />
-    <input type="hidden" name="id_postagem" id="id_postagem" value="7" />
-    <span class="text-muted">Somente arquivos do tipo .jpg, png, .gif são permitidos</span>
+    <input type="hidden" name="id" id="id" value="<?php echo $id; ?>"/>   
+    <input type="hidden" name="categoria" id="categoria" value="<?php echo $categoria; ?>"/>      
+    <span class="text-muted">Apenas arquivos do tipo .jpg, png, .gif são permtidos</span>
     <span id="error_multiple_files"></span>
    </div>
    <br />
@@ -30,21 +40,20 @@
    <form method="POST" id="edit_image_form">
     <div class="modal-header">
      <button type="button" class="close" data-dismiss="modal">&times;</button>
-     <h4 class="modal-title">Edit Image Details</h4>
+     <h4 class="modal-title">Editar Detalhes</h4>
     </div>
     <div class="modal-body">
      <div class="form-group">
-      <label>Image Name</label>
+      <label>Nome</label>
       <input type="text" name="image_name" id="image_name" class="form-control" />
      </div>
      <div class="form-group">
-      <label>Image Description</label>
+      <label>Descrição da Imagem</label>
       <input type="text" name="image_description" id="image_description" class="form-control" />
      </div>
     </div>
     <div class="modal-footer">
      <input type="hidden" name="image_id" id="image_id" value="" />
-     <input type="hidden" name="id_postagem" id="id_postagem" value="1" />
      <input type="submit" name="submit" class="btn btn-info" value="Edit" />
      <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
     </div>
@@ -57,9 +66,18 @@ $(document).ready(function(){
  load_image_data();
  function load_image_data()
  {
+  var form_data = new FormData();     
+  var id_post = document.getElementById("id").value;   
+  var categoria_post = document.getElementById("categoria").value;      
+  form_data.append("id", id_post);    
+  form_data.append("categoria", categoria_post);             
   $.ajax({
    url:"fetch.php",
    method:"POST",
+   data: form_data,
+   contentType: false,
+   cache: false,
+   processData: false,      
    success:function(data)
    {
     $('#image_table').html(data);
@@ -70,10 +88,9 @@ $(document).ready(function(){
   var error_images = '';
   var form_data = new FormData();
   var files = $('#multiple_files')[0].files;
-  var id = document.getElementById("id_postagem").value;     
   if(files.length > 20)
   {
-   error_images += 'Você não pode selecionar mais que 20 arquivos!';
+   error_images += 'Você não pode selecionar mais de 20 arquivos ao mesmo tempo!';
   }
   else
   {
@@ -81,9 +98,11 @@ $(document).ready(function(){
    {
     var name = document.getElementById("multiple_files").files[i].name;
     var ext = name.split('.').pop().toLowerCase();
+    var id_post = document.getElementById("id").value;   
+    var categoria_post = document.getElementById("categoria").value;      
     if(jQuery.inArray(ext, ['gif','png','jpg','jpeg']) == -1) 
     {
-     error_images += '<p>'+i+' Arquivo inválido!</p>';
+     error_images += '<p>Arquivo '+i+' Inválido</p>';
     }
     var oFReader = new FileReader();
     oFReader.readAsDataURL(document.getElementById("multiple_files").files[i]);
@@ -95,8 +114,9 @@ $(document).ready(function(){
     }
     else
     {
-     form_data.append("id_postagem", id);    
      form_data.append("file[]", document.getElementById('multiple_files').files[i]);
+     form_data.append("id", id_post);    
+     form_data.append("categoria", categoria_post);        
     }
    }
   }
@@ -114,7 +134,7 @@ $(document).ready(function(){
     },   
     success:function(data)
     {
-     $('#error_multiple_files').html('<br /><label class="text-success">Arquivos Enviados!</label>');
+     $('#error_multiple_files').html('<br /><label class="text-success">Enviado!</label>');
      load_image_data();
     }
    });
@@ -145,7 +165,7 @@ $(document).ready(function(){
  $(document).on('click', '.delete', function(){
   var image_id = $(this).attr("id");
   var image_name = $(this).data("image_name");
-  if(confirm("Deseja excluir?"))
+  if(confirm("Tem certeza que deseja excluir?"))
   {
    $.ajax({
     url:"delete.php",
@@ -154,7 +174,7 @@ $(document).ready(function(){
     success:function(data)
     {
      load_image_data();
-     alert("Imagem removida");
+     alert("Imagem Removida!");
     }
    });
   }
@@ -163,7 +183,7 @@ $(document).ready(function(){
   event.preventDefault();
   if($('#image_name').val() == '')
   {
-   alert("Enter Image Name");
+   alert("Informe o nome da imagem");
   }
   else
   {
@@ -175,7 +195,7 @@ $(document).ready(function(){
     {
      $('#imageModal').modal('hide');
      load_image_data();
-     alert('Image Details updated');
+     alert('Detalhes da imagem Editados!');
     }
    });
   }

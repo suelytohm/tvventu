@@ -6,27 +6,28 @@ $video = "https://www.youtube.com/embed/d3_gK9MrXo8";
 try
 {
     include 'configdb.php';
+
+
+    $rs = $connection->prepare("SELECT link FROM aovivo WHERE aovivo = 'S';");
+
+    if($rs->execute())
+    {
+        while($registro = $rs->fetch(PDO::FETCH_OBJ))
+        {
+            $video = "https://www.youtube.com/embed/" . $registro->link ;
+        }
+    }
+    else
+    {
+        echo "Falha";
+    }
+
 }
 catch(PDOException $e)
 {
     echo "Falha: " . $e->getMessage();
     exit();
 }
-
-$rs = $connection->prepare("SELECT link FROM aovivo WHERE aovivo = 'S';");
-
-if($rs->execute())
-{
-    while($registro = $rs->fetch(PDO::FETCH_OBJ))
-    {
-        $video = "https://www.youtube.com/embed/" . $registro->link ;
-    }
-}
-else
-{
-    echo "Falha";
-}
-
 
 
 
@@ -71,6 +72,18 @@ else
             text-align: center;
             padding: 20px;
         }
+        .social-icon
+        {
+            max-width: 50px;
+        }
+        audio 
+        { 
+            max-width: 100%; 
+        }        
+        .section
+        {
+            margin-bottom: 50px;
+        }
     </style>
     
 </head>
@@ -80,7 +93,6 @@ else
         
         
         <div class="section animated bounceInUp">
-            
             <div class="container-fluid">
                 <div class="col-md-12">
                     <div class="row">
@@ -98,7 +110,7 @@ else
             </div>
         </div>
         
-        
+        <?php include 'footer2.php';?>
         
         <!-- JQuery -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

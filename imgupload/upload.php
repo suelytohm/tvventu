@@ -1,12 +1,20 @@
 <?php
 //upload.php
 include('database_connection.php');
-
-$id_postagem = $_POST['id_postagem'];
-
-
 if(count($_FILES["file"]["name"]) > 0)
 {
+    
+if(isset($_REQUEST['id']))
+{
+    $id = $_REQUEST['id'];
+}
+ 
+if(isset($_REQUEST['categoria']))
+{
+    $categoria = $_REQUEST['categoria'];
+}    
+    
+ //$output = '';
  sleep(3);
  for($count=0; $count<count($_FILES["file"]["name"]); $count++)
  {
@@ -18,12 +26,12 @@ if(count($_FILES["file"]["name"]) > 0)
   {
    $file_name = $file_array[0] . '-'. rand() . '.' . $file_extension;
   }
-  $location = '../img/postagens/slide/' . $file_name;
+  $location = 'img/postagens/slide/' . $file_name;
   if(move_uploaded_file($tmp_name, $location))
   {
    $query = "
-   INSERT INTO tbl_image (image_name, image_description, id_postagem) 
-   VALUES ('img/postagens/slide/".$file_name."', '', " . $id_postagem . ")
+   INSERT INTO tbl_image (image_name, image_description, id_postagem, categoria) 
+   VALUES ('img/postagens/slide/".$file_name."', '', '" . $id . "', '" . $categoria . "')
    ";
    $statement = $connect->prepare($query);
    $statement->execute();
@@ -34,7 +42,7 @@ if(count($_FILES["file"]["name"]) > 0)
 function file_already_uploaded($file_name, $connect)
 {
  
- $query = "SELECT * FROM tbl_image WHERE image_name = '".$file_name."'";
+ $query = "SELECT * FROM tbl_image WHERE image_name = '".$file_name."' AND id_postagem = '" . $id . "' AND categoria = '" . $categoria . "';";
  $statement = $connect->prepare($query);
  $statement->execute();
  $number_of_rows = $statement->rowCount();

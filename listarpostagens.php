@@ -18,7 +18,7 @@ catch(PDOException $e)
 
 $anuncios = "";
 $cor = "";
-$rs = $connection->prepare("SELECT id, titulo, categoria, autor, visivel, DATE_FORMAT(data, '%d/%m/%y') AS data FROM postagens");
+$rs = $connection->prepare("SELECT id, titulo, categoria, autor, visivel, DATE_FORMAT(data, '%d/%m/%y') AS data FROM postagens order by(id) DESC");
 
 if($rs->execute())
 {
@@ -43,7 +43,7 @@ if($rs->execute())
         
         // $saida .= "<a href='" . $categoria . ".php?id=" . $id . "' class='carousel-item'>";
         
-        $anuncios .= "<a href='editarPostagem.php?id=" . $id . "' class='card text-white " . $cor . "'>";
+        $anuncios .= "<a href='editarPostagem.php?id=" . $id . "&carregar=true' class='card text-white " . $cor . "'>";
           $anuncios .= "<div class='card-body'>";
             $anuncios .= "<h5 class='card-title'>" . $titulo . "</h5>";
             $anuncios .= "<p class='card-text text-white'>Data: " . $data ."</p>";
@@ -63,7 +63,7 @@ else
 <head>
     <meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>Anúncios - TV Ventu</title>
+    <title>Postagens - TV Ventu</title>
     <link rel="icon" href="img/favicon.png" type="image/gif">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
@@ -109,7 +109,7 @@ else
                 <div class="col-md-12 text-center">
                     <hr>
                     <img src="img/logo2.png">
-                    <h1 class="titulo" align="center">Anúncios</h1>        
+                    <h1 class="titulo" align="center">Postagens</h1>        
                 </div>
             </div>          
             <div class="row">
@@ -123,7 +123,7 @@ else
                     <a href="listaranuncios.php" class="btn btn-success">Anúncios</a>
                 </div>    
                 <div class="col-md-3">                        
-                    <a class="btn btn-warning">Melhores do Ano</a>
+                    <a href="listarmelhoresdoano.php" class="btn btn-warning">Melhores do Ano</a>
                 </div>
             </div>            
             <div class="row">

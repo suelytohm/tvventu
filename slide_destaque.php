@@ -4,7 +4,7 @@ include 'configdb.php';
 
 function indicadores($connection)
 {
-    $rs = $connection->prepare("SELECT id, titulo, imagem_principal as imagem FROM postagens WHERE tipo = 'Destaque' AND visivel = 'S' ORDER BY id DESC LIMIT 5;");
+    $rs = $connection->prepare("SELECT id, titulo, imagem_principal as imagem FROM postagens WHERE tipo = 'Destaque' AND visivel = 'S' ORDER BY id DESC LIMIT 15;");
 
     $count = 0;
     $saida = '';
@@ -34,7 +34,7 @@ function slide($connection)
     $saida = '';
     $count = 0;
     
-    $rs = $connection->prepare("SELECT id, titulo, categoria, imagem_principal as imagem FROM postagens WHERE tipo = 'Destaque' AND visivel = 'S' ORDER BY id DESC LIMIT 5;");
+    $rs = $connection->prepare("SELECT id, titulo, categoria, imagem_principal as imagem FROM postagens WHERE tipo = 'Destaque' AND visivel = 'S' ORDER BY id DESC LIMIT 15;");
 
     if($rs->execute())
     {
@@ -47,11 +47,13 @@ function slide($connection)
 
             if($count == 0)
             {
-                $saida .= "<a href='" . $categoria . ".php?id=" . $id . "' class='carousel-item active'>";
+                // $saida .= "<a href='" . $categoria . ".php?id=" . $id . "' class='carousel-item active'>";
+                $saida .= "<a class='carousel-item active'>";
+                // $saida .= "<div class='carousel-item active'>";
             }
             else
             {
-                $saida .= "<a href='" . $categoria . ".php?id=" . $id . "' class='carousel-item'>";
+                $saida .= "<a class='carousel-item'>";
             }
             
             $saida .= "<div class='view'>";
@@ -59,7 +61,7 @@ function slide($connection)
             //$saida .= "<div class='mask rgba-black-light'></div>";
             $saida .= "</div>";
             $saida .= "<div class='carousel-caption'>";
-            $saida .= "<h3 class='h3-responsive'>" . $titulo . "</h3>";
+            // $saida .= "<h3 class='h3-responsive'>" . $titulo . "</h3>";
             $saida .= "</div>";
             
             $count = $count + 1;

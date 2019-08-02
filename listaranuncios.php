@@ -124,7 +124,7 @@ else
                     <a href="listaranuncios.php" class="btn btn-success">Anúncios</a>
                 </div>    
                 <div class="col-md-3">                        
-                    <a class="btn btn-warning">Melhores do Ano</a>
+                    <a href="listarmelhoresdoano.php" class="btn btn-warning">Melhores do Ano</a>
                 </div>
             </div>            
             <div class="row">

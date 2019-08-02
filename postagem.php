@@ -47,7 +47,7 @@ include "configdb.php";
                             echo "Falha: " . $e->getMessage();
                             exit();
                         }
-                        include 'mensagem_sucesso.php';
+                        header("Location: gravacao_sucesso.php?acao=postagens&tipo=novoregistro");
                     }
                     else
                     {
@@ -150,6 +150,7 @@ include "configdb.php";
                                 <br>                
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" name="categoria" id="categoria">
+                                  <option value="melhoresDoAno">Melhores Do Ano</option>    
                                   <option value="noticias">Notícias</option>
                                   <option value="esportes">Esportes</option>
                                   <option value="politica">Política</option>
@@ -160,8 +161,6 @@ include "configdb.php";
                             
                                                   
                             <div class="col-md-6">
-                            
-
                                 <label for="tipo">Tipo</label>
                                 <select class="form-control" name="tipo" id="tipo">
                                   <option value="Normal">Normal</option>
@@ -176,10 +175,6 @@ include "configdb.php";
                             </div>
                             
                         </div>
-                        
-
-                        
-                        
                         
                         <input class="btn btn-danger" type="submit" value="Postar">
                         <a href="adm.php" class="btn btn-primary">Voltar</a>

@@ -7,20 +7,26 @@
               </button>
               <div class="collapse navbar-collapse" id="basicExampleNav">
                 <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php"><button class="btn btn-info">Início</button></a>
+                  </li>                  
                   <li class="nav-item">
                     <a class="nav-link" href="aovivo.php"><button class="btn btn-danger">Ao Vivo</button>
-                      <span class="sr-only">(current)</span>
                     </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="melhoresdoano.php"><button class="btn btn-success">Melhores do ano</button></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="sobre.php"><button class="btn btn-primary">Sobre nós</button></a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link" href="contato.php"><button class="btn btn-warning">Contato</button></a>
+                    <a class="nav-link" href="videos.php"><button class="btn btn-amber">Vídeos</button></a>
+                  </li>  
+                  <li class="nav-item">
+                    <a class="nav-link" href="listarmelhoresdoano.php"><button class="btn btn-success">Melhores do ano</button></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"><button class="btn btn-primary">Sobre nós</button></a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"><button class="btn btn-warning">Contato</button></a>
                   </li>                    
                 </ul>
                 <!-- Links -->

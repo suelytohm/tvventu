@@ -27,6 +27,7 @@ try
         echo $stmt->errorInfo();
     }
     echo "Link ao vivo!";
+    echo "<br><a href='index.php'>Voltar para o site</a>";
 }
 catch(PDOException $e)
 {
